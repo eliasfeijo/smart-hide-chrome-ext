@@ -8,6 +8,21 @@
     "default_icon": "images/icon-128.png"
   },
   "permissions": [
-    "contextMenus"
-  ]
+    "contextMenus",
+    "activeTab"
+  ],
+  "icons": {
+    "16": "images/icon-16.png",
+    "128": "images/icon-128.png"
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content.js"],
+    "css": ["content.css"],
+    "all_frames": true,
+    "match_about_blank": true
+  }],
+  "background": {
+    "service_worker": "service-worker.js"
+  }
 }
