@@ -1,0 +1,13 @@
+{
+  "name": "Smart Hide",
+  "description": "Hide unwanted elements on the site",
+  "version": "0.1",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "images/icon-128.png"
+  },
+  "permissions": [
+    "contextMenus"
+  ]
+}
