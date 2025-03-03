@@ -11,6 +11,7 @@ document.addEventListener(
 );
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log("Received message: ", request);
   if (request == "getElementToHide") {
     console.log("Sending selected element: ", selectedElementToHide);
     sendResponse({ element: selectedElementToHide });
@@ -47,4 +48,26 @@ function getElementFullSelector(element) {
     parent = parent.parentElement;
   }
   return selector;
+}
+
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  console.log("Storage changed: ", namespace, changes);
+  hideElements();
+});
+
+function hideElements() {
+  const url = new URL(window.location.href);
+  chrome.storage.local.get(null, (data) => {
+    console.log("Stored data: ", data);
+    if (data[url.hostname]) {
+      const elements = data[url.hostname][url.pathname] || {};
+      console.log("Elements to hide: ", elements);
+      for (const selector in elements) {
+        const element = document.querySelector(selector);
+        if (element) {
+          element.classList.add("hide");
+        }
+      }
+    }
+  });
 }

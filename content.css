@@ -2,3 +2,7 @@
   border: 1px solid #FF0000;
   background-color: #FF0000;
 }
+
+.hide {
+  display: none;
+}

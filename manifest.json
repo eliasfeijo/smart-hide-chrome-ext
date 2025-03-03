@@ -9,7 +9,8 @@
   },
   "permissions": [
     "contextMenus",
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
   "icons": {
     "16": "images/icon-16.png",
