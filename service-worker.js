@@ -5,25 +5,48 @@ chrome.runtime.onInstalled.addListener(async () => {
     type: "normal",
     contexts: ["all"],
   });
+  chrome.contextMenus.create({
+    id: "smart-hide",
+    title: "Smart Hide",
+    type: "normal",
+    contexts: ["all"],
+  });
 });
 
 chrome.contextMenus.onClicked.addListener(handleContextMenuClick);
 
 async function handleContextMenuClick(item, tab) {
-  if (item.menuItemId === "hide") {
-    // Get element to hide
-    const { element } = await chrome.tabs.sendMessage(
-      tab.id,
-      "getElementToHide",
-      {
-        frameId: item.frameId,
-      }
-    );
-    // Get URL
-    const url = item.frameUrl ? new URL(item.frameUrl) : new URL(tab.url);
-    console.log("URL: ", url);
-    storeElementToHide(element, url);
+  switch (item.menuItemId) {
+    case "hide":
+      handleHideContextMenuClick(item, tab);
+      break;
+    case "smart-hide":
+      handleSmartHideContextMenuClick(item, tab);
+      break;
+    default:
+      break;
   }
+}
+
+async function handleSmartHideContextMenuClick(item, tab) {
+  await chrome.tabs.sendMessage(tab.id, "smartHideElement", {
+    frameId: item.frameId,
+  });
+}
+
+async function handleHideContextMenuClick(item, tab) {
+  // Get element to hide
+  const { element } = await chrome.tabs.sendMessage(
+    tab.id,
+    "getElementToHide",
+    {
+      frameId: item.frameId,
+    }
+  );
+  // Get URL
+  const url = item.frameUrl ? new URL(item.frameUrl) : new URL(tab.url);
+  console.log("URL: ", url);
+  storeElementToHide(element, url);
 }
 
 async function storeElementToHide(element, url) {

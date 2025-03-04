@@ -6,3 +6,80 @@
 .hide {
   display: none !important;
 }
+
+#__smart-hide-menu {
+  min-width: 250px;
+  background-color: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#__smart-hide-menu .title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #666;
+}
+#__smart-hide-menu h1 {
+  text-align: center;
+  margin: 0;
+  padding: 10px;
+  color: white;
+  cursor: default;
+  flex: 1;
+}
+#__smart-hide-menu button#btn-close {
+  background-color: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding-right: 10px;
+}
+#__smart-hide-menu button#btn-close svg {
+  height: 26px;;
+}
+#__smart-hide-menu .content {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+#__smart-hide-menu .content .inputs {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+#__smart-hide-menu .content .inputs .top-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+#__smart-hide-menu .content .inputs .top-btns button {
+  justify-content: center;
+  padding: 10px;
+  margin: 0 5px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+#__smart-hide-menu .content .inputs .top-btns button#btn-undo svg {
+  height: 16px;
+  margin-right: 5px;
+}
+#__smart-hide-menu .content .inputs .input-checkbox {
+  display: flex;
+  align-items: center;
+}
+#__smart-hide-menu .content button#btn-hide-element {
+  padding: 10px;
+  background-color: #666;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+#__smart-hide-menu .content button#btn-hide-element:hover {
+  opacity: 0.8;
+}
