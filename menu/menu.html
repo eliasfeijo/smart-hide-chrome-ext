@@ -1,0 +1,280 @@
+<html>
+  <head>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var button = document.querySelector('button');
+        button.addEventListener('click', function() {
+          // Create the menu
+          var menu = document.createElement('div');
+          menu.id = '__smart-hide-menu';
+          menu.innerHTML = `
+            <div class="title">
+              <h1>Smart Hide</h1>
+              <button id="btn-close">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>          
+              </button>
+            </div>
+            <div class="content">
+              <div class="inputs">
+                <div class="top-btns">
+                  <button id="btn-select-outer">Select parent</button>
+                  <button id="btn-undo">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m7.49 12-3.75 3.75m0 0 3.75 3.75m-3.75-3.75h16.5V4.499" />
+                    </svg>
+                    Undo
+                  </button>
+                </div>
+                <div class="input-checkbox">
+                  <input type="checkbox" id="checkbox-preview" />
+                  <label for="checkbox-preview">Preview</label>
+                </div>
+              </div>
+              <button id="btn-hide-element">Hide element</button>
+            </div>
+          `;
+          document.body.appendChild(menu);
+          // position the menu on the best side of the button
+          var offset = 10; // small offset gap
+          var buttonRect = button.getBoundingClientRect();
+          var menuRect = menu.getBoundingClientRect();
+          var top = buttonRect.bottom + window.scrollY + offset;
+          var left = buttonRect.left + window.scrollX - menuRect.width - offset;
+
+          // Check if the button is too close to the left side of the screen
+          if (buttonRect.left - menuRect.width - offset < 0) {
+          // If so, position it on the right side
+          left = buttonRect.right + window.scrollX + offset;
+          }
+
+          // Check if the menu fits below the button
+          if (buttonRect.bottom + menuRect.height + offset > window.innerHeight) {
+          // If not, position it above the button
+          top = buttonRect.top + window.scrollY - menuRect.height - offset;
+          }
+          menu.style.top = top + 'px';
+          menu.style.left = left + 'px';
+          // it should resize the menu if it's out of the window bounds
+          menuRect = menu.getBoundingClientRect();
+          if (menuRect.top < 0) {
+            menu.style.top = '0px';
+          }
+          if (menuRect.left < 0) {
+            menu.style.left = '0';
+          }
+          if (menuRect.bottom > window.innerHeight) {
+            menu.style.height = window.innerHeight - menuRect.top + 'px';
+          }
+          if (menuRect.right > window.innerWidth) {
+            menu.style.width = window.innerWidth - menuRect.left + 'px';
+          }
+
+          // Get the input elements
+          var selectOuter = document.getElementById('btn-select-outer');
+          var undo = document.getElementById('btn-undo');
+          var hideElement = document.getElementById('btn-hide-element');
+          var preview = document.getElementById('checkbox-preview');
+          var close = document.getElementById('btn-close');
+
+          // Set the initial selected element
+          var originalElement = button;
+          var selectedElement = button;
+          var previousSelectedElements = [];
+          var isPreview = false;
+          var originalDisplay = selectedElement.style.display;
+
+          var restoreDefaults = function() {
+            originalElement = null;
+            selectedElement = null;
+            previousSelectedElements = [];
+            isPreview = false;
+            originalDisplay = null;
+          };
+
+          // Add the event listeners
+          selectedElement.classList.add('context-menu-clicked-element');
+          selectOuter.addEventListener('click', function() {
+            if (selectedElement === document.body || isPreview) {
+              return;
+            }
+            selectedElement.classList.remove('context-menu-clicked-element');
+            previousSelectedElements.push(selectedElement);
+            selectedElement = selectedElement.parentElement;
+            selectedElement.classList.add('context-menu-clicked-element');
+            originalDisplay = selectedElement.style.display;
+          });
+          undo.addEventListener('click', function() {
+            if (previousSelectedElements.length === 0, isPreview) {
+              return;
+            }
+            selectedElement.classList.remove('context-menu-clicked-element');
+            selectedElement = previousSelectedElements.pop();
+            if (!selectedElement) {
+              selectedElement = originalElement;
+            }
+            selectedElement.classList.add('context-menu-clicked-element');
+            originalDisplay = selectedElement.style.display;
+          });
+          preview.addEventListener('change', function() {
+            if (preview.checked) {
+              selectedElement.style.display = 'none';
+              isPreview = true;
+            } else {
+              selectedElement.style.display = originalDisplay;
+              isPreview = false;
+            }
+          });
+          hideElement.addEventListener('click', function() {
+            selectedElement.classList.remove('context-menu-clicked-element');
+            selectedElement.style.display = 'none';
+            restoreDefaults();
+            menu.remove();
+          });
+          close.addEventListener('click', function() {
+            selectedElement.classList.remove('context-menu-clicked-element');
+            selectedElement.style.display = originalDisplay;
+            restoreDefaults();
+            menu.remove();
+          });
+        });
+      });
+    </script>
+    <style>
+      .context-menu-clicked-element {
+        border: 1px solid #FF0000;
+        background-color: #FF0000;
+      }
+      html {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        width: 100%;
+        height: 100%;
+      }
+      #test-area {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #__smart-hide-menu {
+        min-width: 250px;
+        background-color: #f0f0f0;
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      #__smart-hide-menu .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #666;
+      }
+      #__smart-hide-menu h1 {
+        text-align: center;
+        margin: 0;
+        padding: 10px;
+        color: white;
+        cursor: default;
+        flex: 1;
+      }
+      #__smart-hide-menu button#btn-close {
+        background-color: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding-right: 10px;
+      }
+      #__smart-hide-menu button#btn-close svg {
+        height: 26px;;
+      }
+      #__smart-hide-menu .content {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+      }
+      #__smart-hide-menu .content .inputs {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+      }
+      #__smart-hide-menu .content .inputs .top-btns {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      #__smart-hide-menu .content .inputs .top-btns button {
+        justify-content: center;
+        padding: 10px;
+        margin: 0 5px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+      #__smart-hide-menu .content .inputs .top-btns button#btn-undo svg {
+        height: 16px;
+        margin-right: 5px;
+      }
+      #__smart-hide-menu .content .inputs .input-checkbox {
+        display: flex;
+        align-items: center;
+      }
+      #__smart-hide-menu .content button#btn-hide-element {
+        padding: 10px;
+        background-color: #666;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      #__smart-hide-menu .content button#btn-hide-element:hover {
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="test-area">
+      <button>Open Menu</button>
+    </div>
+    <!-- Menu -->
+    <!-- <div id="__smart-hide-menu">
+      <div class="title">
+        <h1>
+          Smart Hide
+        </h1>
+        <button id="btn-close">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>          
+        </button>
+      </div>
+      <div class="content">
+        <div class="inputs">
+          <div class="top-btns">
+            <button id="btn-select-outer">Select parent</button>
+            <button id="btn-undo">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m7.49 12-3.75 3.75m0 0 3.75 3.75m-3.75-3.75h16.5V4.499" />
+              </svg>
+              Undo
+            </button>
+          </div>
+          <div class="input-checkbox">
+            <input type="checkbox" id="checkbox-preview" />
+            <label for="checkbox-preview">Preview</label>
+          </div>
+        </div>
+        <button id="btn-hide-element">Hide element</button>
+      </div>
+    </div> -->
+  </body>
+</html>
