@@ -39,6 +39,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     case "smartHideElement":
       smartHideElement();
       break;
+    case "removeElement":
+      if (selectedElementToHide) {
+        clickedElement.style.visibility = "none";
+        selectedElementToHide.shouldRemove = true;
+        storeSelectedElementToHide();
+      } else {
+        console.log("No element selected to remove");
+      }
+      break;
     default:
       break;
   }
