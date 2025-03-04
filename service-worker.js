@@ -28,46 +28,15 @@ async function handleContextMenuClick(item, tab) {
   }
 }
 
-async function handleSmartHideContextMenuClick(item, tab) {
-  await chrome.tabs.sendMessage(tab.id, "smartHideElement", {
+async function handleHideContextMenuClick(item, tab) {
+  // Get element to hide
+  await chrome.tabs.sendMessage(tab.id, "hideElement", {
     frameId: item.frameId,
   });
 }
 
-async function handleHideContextMenuClick(item, tab) {
-  // Get element to hide
-  const { element } = await chrome.tabs.sendMessage(
-    tab.id,
-    "getElementToHide",
-    {
-      frameId: item.frameId,
-    }
-  );
-  // Get URL
-  const url = item.frameUrl ? new URL(item.frameUrl) : new URL(tab.url);
-  console.log("URL: ", url);
-  storeElementToHide(element, url);
-}
-
-async function storeElementToHide(element, url) {
-  try {
-    // Get stored data
-    const storedData = await chrome.storage.local.get(url.hostname);
-    const data = storedData[url.hostname] || {};
-    console.log("Stored data: ", data);
-
-    // Create path-level data object if it doesn't exist
-    if (!data[url.pathname]) {
-      data[url.pathname] = {};
-    }
-
-    // Add element data with the selector as the key
-    data[url.pathname][element.fullSelector] = element;
-    console.log("Updated data: ", data);
-
-    // Store updated data
-    await chrome.storage.local.set({ [url.hostname]: data });
-  } catch (error) {
-    console.error("Error handling context menu click: ", error);
-  }
+async function handleSmartHideContextMenuClick(item, tab) {
+  await chrome.tabs.sendMessage(tab.id, "smartHideElement", {
+    frameId: item.frameId,
+  });
 }

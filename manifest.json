@@ -20,7 +20,6 @@
     "matches": ["<all_urls>"],
     "js": ["content.js"],
     "css": ["content.css"],
-    "all_frames": true,
     "match_about_blank": true
   }],
   "background": {

@@ -1,4 +1,4 @@
-var elementsToHide = [];
+var elementsToHide = {};
 // Normal hide element
 var clickedElement = null;
 var selectedElementToHide = null;
@@ -27,18 +27,16 @@ document.addEventListener(
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log("Received message: ", request);
   switch (request) {
-    case "smartHideElement":
-      smartHideElement();
-      break;
-    case "getElementToHide":
+    case "hideElement":
       if (selectedElementToHide) {
-        console.log("Sending selected element: ", selectedElementToHide);
-        sendResponse({ element: selectedElementToHide });
-        selectedElementToHide = null;
+        clickedElement.remove();
+        storeSelectedElementToHide();
       } else {
         console.log("No element selected to hide");
-        sendResponse({ element: null });
       }
+      break;
+    case "smartHideElement":
+      smartHideElement();
       break;
     default:
       break;
@@ -159,8 +157,7 @@ function openMenu() {
     }
   });
   hideElement.addEventListener("click", function () {
-    selectedElement.classList.remove("context-menu-clicked-element");
-    selectedElement.style.display = "none";
+    selectedElement.parentNode.removeChild(selectedElement);
     restoreDefaults();
     menu.remove();
     storeSelectedElementToHide();
@@ -202,6 +199,7 @@ function storeSelectedElementToHide() {
   chrome.storage.local.set({
     [url.hostname]: {
       [url.pathname]: {
+        ...elementsToHide,
         [selectedElementToHide.fullSelector]: selectedElementToHide,
       },
     },
@@ -246,6 +244,7 @@ function getElementFullSelector(element) {
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
   console.log("Storage changed: ", namespace, changes);
+  elementsToHide = {};
   document
     .querySelectorAll(".__smart-hide-hidden-element")
     .forEach((element) => {
@@ -255,29 +254,34 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 });
 
 function getElementsToHide() {
-  const url = new URL(window.location.href);
-  chrome.storage.local.get(url.hostname, (data) => {
+  const { hostname, pathname } = window.location;
+  chrome.storage.local.get(hostname, (data) => {
     console.log("Stored data: ", data);
-    if (data) {
-      const elements = data[url.pathname] || {};
+    if (data[hostname]) {
+      const elements = data[hostname][pathname] || {};
       console.log("Elements to hide: ", elements);
       elementsToHide = elements;
+      hideElements();
     }
   });
 }
 
 function hideElements() {
   if (!elementsToHide) {
+    console.log("No elements to hide");
     return;
   }
-  for (const fullSelector in elementsToHide) {
-    const element = document.querySelector(fullSelector);
+  for (const el of Object.values(elementsToHide)) {
+    let element = document.querySelector(el.fullSelector);
     if (element) {
-      element.classList.add("__smart-hide-hidden-element");
+      element.parentNode.removeChild(element);
+    } else {
+      element = document.querySelector(el.selector);
+      if (element) {
+        element.parentNode.removeChild(element);
+      }
     }
   }
 }
 
 getElementsToHide();
-// Hide elements every second
-setInterval(hideElements, 1000);
