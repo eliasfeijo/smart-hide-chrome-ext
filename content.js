@@ -62,8 +62,8 @@ function hideElements() {
     if (data[url.hostname]) {
       const elements = data[url.hostname][url.pathname] || {};
       console.log("Elements to hide: ", elements);
-      for (const selector in elements) {
-        const element = document.querySelector(selector);
+      for (const fullSelector in elements) {
+        const element = document.querySelector(fullSelector);
         if (element) {
           element.classList.add("hide");
         }
@@ -71,3 +71,5 @@ function hideElements() {
     }
   });
 }
+
+hideElements();
