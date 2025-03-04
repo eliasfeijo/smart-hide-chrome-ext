@@ -18,7 +18,7 @@ document.addEventListener(
   "contextmenu",
   (event) => {
     console.log("Event: ", event);
-    clickedElement = event.target;
+    clickedElement = getOuterContainer(event.target);
     selectedElementToHide = getElementData(event.target);
   },
   true
@@ -207,19 +207,38 @@ function storeSelectedElementToHide() {
 }
 
 function getElementData(element) {
-  let parent = undefined;
-  let index = undefined;
-  if (element.parentElement) {
-    index = getElementIndex(element);
-    parent = getElementData(element.parentElement);
-  }
+  // let parent = undefined;
+  // let index = undefined;
+  // if (element.parentElement) {
+  //   index = getElementIndex(element);
+  //   parent = getElementData(element.parentElement);
+  // }
+  // return {
+  //   selector: getElementSelector(element, index),
+  //   fullSelector: getElementFullSelector(element),
+  //   parent,
+  //   index,
+  // };
+  let container = getOuterContainer(element);
   return {
-    selector: getElementSelector(element, index),
-    fullSelector: getElementFullSelector(element),
-    parent,
-    index,
+    fullSelector: getElementFullSelector(container),
   };
 }
+
+getOuterContainer = (element) => {
+  let parent = element.parentElement;
+  if (!parent || parent.tagName === "BODY") {
+    return element;
+  }
+  // check if parent size is bigger than the child
+  if (
+    parent.offsetWidth > element.offsetWidth &&
+    parent.offsetHeight > element.offsetHeight
+  ) {
+    return element;
+  }
+  return getOuterContainer(parent);
+};
 
 function getElementSelector(element, index) {
   let selector = element.tagName.toLowerCase();
@@ -291,8 +310,6 @@ function hideElements() {
   }
 }
 
-function getCorrectElement(storedElement) {
-  //
-}
-
 getElementsToHide();
+
+setTimeout(hideElements, 1000);
