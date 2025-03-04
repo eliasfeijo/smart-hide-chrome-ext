@@ -228,6 +228,29 @@
         display: flex;
         align-items: center;
       }
+      #__smart-hide-menu .content .inputs .input-checkbox input[type="checkbox"] {
+        display: none;
+      }
+      #__smart-hide-menu .content .inputs .input-checkbox input[type="checkbox"] + label::before {
+        content: '';
+        width: 16px;
+        height: 16px;
+        border: 1px solid #000;
+        margin-right: 5px;
+        background-color: white;
+        height: 16px;
+        width: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #__smart-hide-menu .content .inputs .input-checkbox input[type="checkbox"]:checked + label::before {
+        content: '✔';
+      }
+      #__smart-hide-menu .content .inputs .input-checkbox input[type="checkbox"] + label {
+        display: flex;
+        position: relative;
+      }
       #__smart-hide-menu .content button#btn-hide-element {
         padding: 10px;
         background-color: #666;

@@ -8,6 +8,11 @@ var selectedElement = null;
 var previousSelectedElements = [];
 var isPreview = false;
 var originalDisplay = null;
+// Menu drag
+var mousePosition;
+var offset = [0, 0];
+var div;
+var isMouseDown = false;
 
 document.addEventListener(
   "contextmenu",
@@ -51,31 +56,31 @@ function openMenu() {
   var menu = document.createElement("div");
   menu.id = "__smart-hide-menu";
   menu.innerHTML = `
-    <div class="title">
+    <div class="__title">
       <h1>Smart Hide</h1>
-      <button id="btn-close">
+      <button id="__btn-close">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>          
       </button>
     </div>
-    <div class="content">
-      <div class="inputs">
-        <div class="top-btns">
-          <button id="btn-select-outer">Select parent</button>
-          <button id="btn-undo">
+    <div class="__content">
+      <div class="__inputs">
+        <div class="__top-btns">
+          <button id="__btn-select-outer">Select parent</button>
+          <button id="__btn-undo">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="m7.49 12-3.75 3.75m0 0 3.75 3.75m-3.75-3.75h16.5V4.499" />
             </svg>
             Undo
           </button>
         </div>
-        <div class="input-checkbox">
-          <input type="checkbox" id="checkbox-preview" />
-          <label for="checkbox-preview">Preview</label>
+        <div class="__input-checkbox">
+          <input type="checkbox" id="__checkbox-preview" />
+          <label for="__checkbox-preview">Preview</label>
         </div>
       </div>
-      <button id="btn-hide-element">Hide element</button>
+      <button id="__btn-hide-element">Hide element</button>
     </div>
   `;
   document.body.appendChild(menu);
@@ -87,44 +92,9 @@ function openMenu() {
   isPreview = false;
   originalDisplay = selectedElement.style.display;
 
-  // position the menu on the best side of the selectedElement
-  var offset = 10; // small offset gap
-  var selectedElementRect = selectedElement.getBoundingClientRect();
-  var menuRect = menu.getBoundingClientRect();
-  var top = selectedElementRect.bottom + window.scrollY + offset;
-  var left =
-    selectedElementRect.left + window.scrollX - menuRect.width - offset;
-
-  // Check if the selectedElement is too close to the left side of the screen
-  if (selectedElementRect.left - menuRect.width - offset < 0) {
-    // If so, position it on the right side
-    left = selectedElementRect.right + window.scrollX + offset;
-  }
-
-  // Check if the menu fits below the selectedElement
-  if (
-    selectedElementRect.bottom + menuRect.height + offset >
-    window.innerHeight
-  ) {
-    // If not, position it above the selectedElement
-    top = selectedElementRect.top + window.scrollY - menuRect.height - offset;
-  }
-  menu.style.top = top + "px";
-  menu.style.left = left + "px";
-  menuRect = menu.getBoundingClientRect();
-  // it should resize the menu if it's out of the window bounds
-  if (menuRect.top < 0) {
-    menu.style.top = "0px";
-  }
-  if (menuRect.left < 0) {
-    menu.style.left = "0";
-  }
-  if (menuRect.bottom > window.innerHeight) {
-    menu.style.height = window.innerHeight - menuRect.top + "px";
-  }
-  if (menuRect.right > window.innerWidth) {
-    //menu.style.width = window.innerWidth - menuRect.left + "px";
-  }
+  // position menu in the center of the screen
+  menu.style.left = window.innerWidth / 2 - menu.offsetWidth / 2 + "px";
+  menu.style.top = window.innerHeight / 2 - menu.offsetHeight / 2 + "px";
 
   var restoreDefaults = function () {
     originalElement = null;
@@ -135,35 +105,47 @@ function openMenu() {
   };
 
   // Get the input elements
-  var selectOuter = document.getElementById("btn-select-outer");
-  var undo = document.getElementById("btn-undo");
-  var hideElement = document.getElementById("btn-hide-element");
-  var preview = document.getElementById("checkbox-preview");
-  var close = document.getElementById("btn-close");
+  var selectOuter = document.getElementById("__btn-select-outer");
+  var undo = document.getElementById("__btn-undo");
+  var hideElement = document.getElementById("__btn-hide-element");
+  var preview = document.getElementById("__checkbox-preview");
+  var close = document.getElementById("__btn-close");
 
   // Add the event listeners
   selectedElement.classList.add("context-menu-clicked-element");
   selectOuter.addEventListener("click", function () {
-    if (selectedElement === document.body || isPreview) {
+    if (selectedElement === document.body) {
       return;
     }
     selectedElement.classList.remove("context-menu-clicked-element");
+    if (isPreview) {
+      selectedElement.style.display = originalDisplay;
+    }
     previousSelectedElements.push(selectedElement);
     selectedElement = selectedElement.parentElement;
     selectedElement.classList.add("context-menu-clicked-element");
     originalDisplay = selectedElement.style.display;
+    if (isPreview) {
+      selectedElement.style.display = "none";
+    }
   });
   undo.addEventListener("click", function () {
-    if ((previousSelectedElements.length === 0, isPreview)) {
+    if (previousSelectedElements.length === 0) {
       return;
     }
     selectedElement.classList.remove("context-menu-clicked-element");
+    if (isPreview) {
+      selectedElement.style.display = originalDisplay;
+    }
     selectedElement = previousSelectedElements.pop();
     if (!selectedElement) {
       selectedElement = originalElement;
     }
     selectedElement.classList.add("context-menu-clicked-element");
     originalDisplay = selectedElement.style.display;
+    if (isPreview) {
+      selectedElement.style.display = "none";
+    }
   });
   preview.addEventListener("change", function () {
     if (preview.checked) {
@@ -186,6 +168,27 @@ function openMenu() {
     selectedElement.style.display = originalDisplay;
     restoreDefaults();
     menu.remove();
+  });
+
+  // Add the drag event listeners
+  var titleElement = document.querySelector("#__smart-hide-menu .__title");
+  titleElement.addEventListener("mousedown", function (e) {
+    isMouseDown = true;
+    offset = [menu.offsetLeft - e.clientX, menu.offsetTop - e.clientY];
+  });
+  document.addEventListener("mouseup", function () {
+    isMouseDown = false;
+  });
+  document.addEventListener("mousemove", function (event) {
+    event.preventDefault();
+    if (isMouseDown) {
+      mousePosition = {
+        x: event.clientX,
+        y: event.clientY,
+      };
+      menu.style.left = mousePosition.x + offset[0] + "px";
+      menu.style.top = mousePosition.y + offset[1] + "px";
+    }
   });
 }
 

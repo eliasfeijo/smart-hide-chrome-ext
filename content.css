@@ -1,5 +1,5 @@
 .context-menu-clicked-element {
-  border: 1px solid #FF0000;
+  border: 10px solid #FF0000;
   background-color: #FF0000;
 }
 
@@ -19,63 +19,91 @@
   border: 1px solid #666;
   border-radius: 5px;
 }
-#__smart-hide-menu .title {
+#__smart-hide-menu .__title {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #666;
+  cursor: pointer;
 }
-#__smart-hide-menu h1 {
+#__smart-hide-menu .__title h1 {
   text-align: center;
   margin: 0;
   padding: 10px;
   color: white;
-  cursor: default;
   flex: 1;
 }
-#__smart-hide-menu button#btn-close {
+#__smart-hide-menu button#__btn-close {
   background-color: transparent;
   border: none;
   color: white;
   cursor: pointer;
   padding-right: 10px;
 }
-#__smart-hide-menu button#btn-close svg {
+#__smart-hide-menu button#__btn-close svg {
   height: 26px;;
 }
-#__smart-hide-menu .content {
+#__smart-hide-menu .__content {
   padding: 10px;
   display: flex;
   flex-direction: column;
 }
-#__smart-hide-menu .content .inputs {
+#__smart-hide-menu .__content .__inputs {
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
+  color: black;
 }
-#__smart-hide-menu .content .inputs .top-btns {
+#__smart-hide-menu .__content .__inputs .__top-btns {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
 }
-#__smart-hide-menu .content .inputs .top-btns button {
+#__smart-hide-menu .__content .__inputs .__top-btns button {
   justify-content: center;
   padding: 10px;
   margin: 0 5px;
   display: flex;
   align-items: center;
   cursor: pointer;
+  border: solid 1px #666;
+  border-radius: 3px;
+  color: black;
 }
-#__smart-hide-menu .content .inputs .top-btns button#btn-undo svg {
+#__smart-hide-menu .__content .__inputs .__top-btns button#__btn-undo svg {
   height: 16px;
   margin-right: 5px;
 }
-#__smart-hide-menu .content .inputs .input-checkbox {
+#__smart-hide-menu .__content .__inputs .__input-checkbox {
   display: flex;
   align-items: center;
 }
-#__smart-hide-menu .content button#btn-hide-element {
+#__smart-hide-menu .__content .__inputs .__input-checkbox input[type="checkbox"] {
+  display: none;
+}
+#__smart-hide-menu .__content .__inputs .__input-checkbox input[type="checkbox"] + label::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 1px solid #000;
+  margin-right: 5px;
+  background-color: white;
+  height: 16px;
+  width: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#__smart-hide-menu .__content .__inputs .__input-checkbox input[type="checkbox"]:checked + label::before {
+  content: '✔';
+}
+#__smart-hide-menu .__content .__inputs .__input-checkbox input[type="checkbox"] + label {
+  display: flex;
+  position: relative;
+}
+
+#__smart-hide-menu .__content button#__btn-hide-element {
   padding: 10px;
   background-color: #666;
   color: white;
@@ -83,6 +111,6 @@
   cursor: pointer;
   font-size: 16px;
 }
-#__smart-hide-menu .content button#btn-hide-element:hover {
+#__smart-hide-menu .__content button#__btn-hide-element:hover {
   opacity: 0.8;
 }
