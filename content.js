@@ -29,7 +29,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   switch (request) {
     case "hideElement":
       if (selectedElementToHide) {
-        clickedElement.remove();
+        clickedElement.style.display = "none";
         storeSelectedElementToHide();
       } else {
         console.log("No element selected to hide");
@@ -157,7 +157,7 @@ function openMenu() {
     }
   });
   hideElement.addEventListener("click", function () {
-    selectedElement.parentNode.removeChild(selectedElement);
+    selectedElement.style.display = "none";
     restoreDefaults();
     menu.remove();
     storeSelectedElementToHide();
@@ -208,31 +208,43 @@ function storeSelectedElementToHide() {
 
 function getElementData(element) {
   let parent = undefined;
+  let index = undefined;
   if (element.parentElement) {
+    index = getElementIndex(element);
     parent = getElementData(element.parentElement);
   }
   return {
-    selector: getElementSelector(element),
+    selector: getElementSelector(element, index),
     fullSelector: getElementFullSelector(element),
     parent,
+    index,
   };
 }
 
-function getElementSelector(element) {
+function getElementSelector(element, index) {
   let selector = element.tagName.toLowerCase();
   if (element.id) {
     selector += "#" + element.id;
   } else if (element.className) {
     selector += "." + element.className.trim().replace(/\s+/g, ".");
   }
+  if (index !== undefined) {
+    selector += ":nth-child(" + (index + 1) + ")";
+  }
   return selector;
 }
 
+function getElementIndex(element) {
+  return Array.from(element.parentNode.children).indexOf(element);
+}
+
 function getElementFullSelector(element) {
-  let selector = getElementSelector(element);
+  let index = getElementIndex(element);
+  let selector = getElementSelector(element, index);
   let parent = element.parentElement;
   while (parent) {
-    selector = getElementSelector(parent) + " > " + selector;
+    index = getElementIndex(parent);
+    selector = getElementSelector(parent, index) + " > " + selector;
     if (parent.id) {
       // If the parent has an ID, it's unique enough
       break;
@@ -275,13 +287,12 @@ function hideElements() {
     let element = document.querySelector(el.fullSelector);
     if (element) {
       element.parentNode.removeChild(element);
-    } else {
-      element = document.querySelector(el.selector);
-      if (element) {
-        element.parentNode.removeChild(element);
-      }
     }
   }
+}
+
+function getCorrectElement(storedElement) {
+  //
 }
 
 getElementsToHide();
