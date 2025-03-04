@@ -58,29 +58,29 @@ function openMenu() {
   menu.innerHTML = `
     <div class="__title">
       <h1>Smart Hide</h1>
-      <button id="__btn-close">
+      <div id="__btn-close">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>          
-      </button>
+      </div>
     </div>
     <div class="__content">
       <div class="__inputs">
         <div class="__top-btns">
-          <button id="__btn-select-outer">Select parent</button>
-          <button id="__btn-undo">
+          <div id="__btn-select-outer">Select parent</div>
+          <div id="__btn-undo">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="m7.49 12-3.75 3.75m0 0 3.75 3.75m-3.75-3.75h16.5V4.499" />
             </svg>
             Undo
-          </button>
+          </div>
         </div>
         <div class="__input-checkbox">
           <input type="checkbox" id="__checkbox-preview" />
           <label for="__checkbox-preview">Preview</label>
         </div>
       </div>
-      <button id="__btn-hide-element">Hide element</button>
+      <div id="__btn-hide-element">Hide element</div>
     </div>
   `;
   document.body.appendChild(menu);
@@ -92,9 +92,11 @@ function openMenu() {
   isPreview = false;
   originalDisplay = selectedElement.style.display;
 
-  // position menu in the center of the screen
-  menu.style.left = window.innerWidth / 2 - menu.offsetWidth / 2 + "px";
-  menu.style.top = window.innerHeight / 2 - menu.offsetHeight / 2 + "px";
+  // position menu in the center of the screen considering scroll
+  menu.style.left =
+    window.scrollX + window.innerWidth / 2 - menu.offsetWidth / 2 + "px";
+  menu.style.top =
+    window.scrollY + window.innerHeight / 2 - menu.offsetHeight / 2 + "px";
 
   var restoreDefaults = function () {
     originalElement = null;
@@ -181,6 +183,8 @@ function openMenu() {
   });
   document.addEventListener("mousemove", function (event) {
     event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
     if (isMouseDown) {
       mousePosition = {
         x: event.clientX,
