@@ -62,7 +62,7 @@ async function storeElementToHide(element, url) {
     }
 
     // Add element data with the selector as the key
-    data[url.pathname][element.selector] = element;
+    data[url.pathname][element.fullSelector] = element;
     console.log("Updated data: ", data);
 
     // Store updated data

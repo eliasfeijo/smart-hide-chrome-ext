@@ -15,6 +15,9 @@
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 999999;
+  border: 1px solid #666;
+  border-radius: 5px;
 }
 #__smart-hide-menu .title {
   display: flex;

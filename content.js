@@ -178,12 +178,25 @@ function openMenu() {
     selectedElement.style.display = "none";
     restoreDefaults();
     menu.remove();
+    storeSelectedElementToHide();
   });
   close.addEventListener("click", function () {
     selectedElement.classList.remove("context-menu-clicked-element");
     selectedElement.style.display = originalDisplay;
     restoreDefaults();
     menu.remove();
+  });
+}
+
+function storeSelectedElementToHide() {
+  // Store the element to hide
+  const url = new URL(window.location.href);
+  chrome.storage.local.set({
+    [url.hostname]: {
+      [url.pathname]: {
+        [selectedElementToHide.fullSelector]: selectedElementToHide,
+      },
+    },
   });
 }
 
@@ -204,7 +217,7 @@ function getElementSelector(element) {
   if (element.id) {
     selector += "#" + element.id;
   } else if (element.className) {
-    selector += "." + element.className.replace(/\s+/g, ".");
+    selector += "." + element.className.trim().replace(/\s+/g, ".");
   }
   return selector;
 }
@@ -214,6 +227,10 @@ function getElementFullSelector(element) {
   let parent = element.parentElement;
   while (parent) {
     selector = getElementSelector(parent) + " > " + selector;
+    if (parent.id) {
+      // If the parent has an ID, it's unique enough
+      break;
+    }
     parent = parent.parentElement;
   }
   return selector;
