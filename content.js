@@ -1,3 +1,4 @@
+var elementsToHide = [];
 // Normal hide element
 var clickedElement = null;
 var selectedElementToHide = null;
@@ -110,8 +111,8 @@ function openMenu() {
   }
   menu.style.top = top + "px";
   menu.style.left = left + "px";
-  // it should resize the menu if it's out of the window bounds
   menuRect = menu.getBoundingClientRect();
+  // it should resize the menu if it's out of the window bounds
   if (menuRect.top < 0) {
     menu.style.top = "0px";
   }
@@ -122,7 +123,7 @@ function openMenu() {
     menu.style.height = window.innerHeight - menuRect.top + "px";
   }
   if (menuRect.right > window.innerWidth) {
-    menu.style.width = window.innerWidth - menuRect.left + "px";
+    //menu.style.width = window.innerWidth - menuRect.left + "px";
   }
 
   var restoreDefaults = function () {
@@ -238,24 +239,38 @@ function getElementFullSelector(element) {
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
   console.log("Storage changed: ", namespace, changes);
-  hideElements();
+  document
+    .querySelectorAll(".__smart-hide-hidden-element")
+    .forEach((element) => {
+      element.classList.remove("__smart-hide-hidden-element");
+    });
+  getElementsToHide();
 });
 
-function hideElements() {
+function getElementsToHide() {
   const url = new URL(window.location.href);
-  chrome.storage.local.get(null, (data) => {
+  chrome.storage.local.get(url.hostname, (data) => {
     console.log("Stored data: ", data);
-    if (data[url.hostname]) {
-      const elements = data[url.hostname][url.pathname] || {};
+    if (data) {
+      const elements = data[url.pathname] || {};
       console.log("Elements to hide: ", elements);
-      for (const fullSelector in elements) {
-        const element = document.querySelector(fullSelector);
-        if (element) {
-          element.classList.add("hide");
-        }
-      }
+      elementsToHide = elements;
     }
   });
 }
 
-hideElements();
+function hideElements() {
+  if (!elementsToHide) {
+    return;
+  }
+  for (const fullSelector in elementsToHide) {
+    const element = document.querySelector(fullSelector);
+    if (element) {
+      element.classList.add("__smart-hide-hidden-element");
+    }
+  }
+}
+
+getElementsToHide();
+// Hide elements every second
+setInterval(hideElements, 1000);

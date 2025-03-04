@@ -3,7 +3,7 @@
   background-color: #FF0000;
 }
 
-.hide {
+.__smart-hide-hidden-element {
   display: none !important;
 }
 
