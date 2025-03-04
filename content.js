@@ -8,6 +8,7 @@ var selectedElement = null;
 var previousSelectedElements = [];
 var isPreview = false;
 var originalDisplay = null;
+var shouldRemove = false;
 // Menu drag
 var mousePosition;
 var offset = [0, 0];
@@ -19,7 +20,7 @@ document.addEventListener(
   (event) => {
     console.log("Event: ", event);
     clickedElement = getOuterContainer(event.target);
-    selectedElementToHide = getElementData(event.target);
+    selectedElementToHide = getElementData(event.target, true);
   },
   true
 );
@@ -29,7 +30,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   switch (request) {
     case "hideElement":
       if (selectedElementToHide) {
-        clickedElement.style.display = "none";
+        clickedElement.style.visibility = "none";
         storeSelectedElementToHide();
       } else {
         console.log("No element selected to hide");
@@ -80,6 +81,10 @@ function openMenu() {
           <input type="checkbox" id="__checkbox-preview" />
           <label for="__checkbox-preview">Preview</label>
         </div>
+        <div class="__input-checkbox">
+          <input type="checkbox" id="__checkbox-should-remove" />
+          <label for="__checkbox-should-remove">Should remove element</label>
+        </div>
       </div>
       <div id="__btn-hide-element">Hide element</div>
     </div>
@@ -92,6 +97,7 @@ function openMenu() {
   previousSelectedElements = [];
   isPreview = false;
   originalDisplay = selectedElement.style.display;
+  shouldRemove = false;
 
   // position menu in the center of the screen considering scroll
   menu.style.left =
@@ -105,6 +111,8 @@ function openMenu() {
     previousSelectedElements = [];
     isPreview = false;
     originalDisplay = null;
+    shouldRemove = false;
+    isMouseDown = false;
   };
 
   // Get the input elements
@@ -113,6 +121,7 @@ function openMenu() {
   var undo = document.getElementById("__btn-undo");
   var hideElement = document.getElementById("__btn-hide-element");
   var preview = document.getElementById("__checkbox-preview");
+  var shouldRemoveElement = document.getElementById("__checkbox-should-remove");
   var close = document.getElementById("__btn-close");
 
   // Add the event listeners
@@ -131,7 +140,7 @@ function openMenu() {
     selectedElement.classList.add("context-menu-clicked-element");
     originalDisplay = selectedElement.style.display;
     if (isPreview) {
-      selectedElement.style.display = "none";
+      selectedElement.style.visibility = "hidden";
     }
   });
   undo.addEventListener("click", function () {
@@ -150,25 +159,29 @@ function openMenu() {
     selectedElement.classList.add("context-menu-clicked-element");
     originalDisplay = selectedElement.style.display;
     if (isPreview) {
-      selectedElement.style.display = "none";
+      selectedElement.style.visibility = "hidden";
     }
   });
   preview.addEventListener("change", function () {
     if (preview.checked) {
-      selectedElement.style.display = "none";
+      selectedElement.style.visibility = "hidden";
       isPreview = true;
     } else {
       selectedElement.style.display = originalDisplay;
       isPreview = false;
     }
   });
+  shouldRemoveElement.addEventListener("change", function () {
+    shouldRemove = shouldRemoveElement.checked;
+  });
   hideElement.addEventListener("click", function () {
-    selectedElement.style.display = "none";
+    selectedElement.style.visibility = "hidden";
     selectedElement.classList.remove("context-menu-clicked-element");
     selectedElementToHide = getElementData(selectedElement);
+    selectedElementToHide.shouldRemove = shouldRemove;
+    storeSelectedElementToHide();
     restoreDefaults();
     menu.remove();
-    storeSelectedElementToHide();
   });
   close.addEventListener("click", function () {
     selectedElement.classList.remove("context-menu-clicked-element");
@@ -214,7 +227,7 @@ function storeSelectedElementToHide() {
   });
 }
 
-function getElementData(element) {
+function getElementData(element, shouldGetOuterContainer = false) {
   // let parent = undefined;
   // let index = undefined;
   // if (element.parentElement) {
@@ -227,7 +240,9 @@ function getElementData(element) {
   //   parent,
   //   index,
   // };
-  let container = getOuterContainer(element);
+  let container = shouldGetOuterContainer
+    ? getOuterContainer(element)
+    : element;
   return {
     fullSelector: getElementFullSelector(container),
   };
@@ -313,7 +328,11 @@ function hideElements() {
   for (const el of Object.values(elementsToHide)) {
     let element = document.querySelector(el.fullSelector);
     if (element) {
-      element.parentNode.removeChild(element);
+      if (el.shouldRemove) {
+        element.parentNode.removeChild(element);
+        return;
+      }
+      element.classList.add("__smart-hide-hidden-element");
     }
   }
 }

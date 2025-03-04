@@ -4,7 +4,7 @@
 }
 
 .__smart-hide-hidden-element {
-  display: none !important;
+  visibility: hidden !important;
 }
 
 #__smart-hide-menu {
