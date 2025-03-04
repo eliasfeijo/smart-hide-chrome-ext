@@ -44,11 +44,25 @@
 #__smart-hide-menu #__btn-close svg {
   height: 26px;;
 }
+
 #__smart-hide-menu .__content {
   padding: 10px;
   display: flex;
   flex-direction: column;
 }
+
+#__smart-hide-menu .__content .__element {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+#__smart-hide-menu .__content .__element input[type="text"]#__input-element {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid #666;
+  border-radius: 3px;
+}
+
 #__smart-hide-menu .__content .__inputs {
   display: flex;
   flex-direction: column;

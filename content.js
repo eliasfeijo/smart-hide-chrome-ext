@@ -63,6 +63,9 @@ function openMenu() {
       </div>
     </div>
     <div class="__content">
+      <div class="__element">
+        <input type="text" value="${selectedElementToHide.fullSelector}" readonly id="__input-element" />
+      </div>
       <div class="__inputs">
         <div class="__top-btns">
           <div id="__btn-select-outer">Select parent</div>
@@ -105,6 +108,7 @@ function openMenu() {
   };
 
   // Get the input elements
+  var elementInput = document.getElementById("__input-element");
   var selectOuter = document.getElementById("__btn-select-outer");
   var undo = document.getElementById("__btn-undo");
   var hideElement = document.getElementById("__btn-hide-element");
@@ -123,6 +127,7 @@ function openMenu() {
     }
     previousSelectedElements.push(selectedElement);
     selectedElement = selectedElement.parentElement;
+    elementInput.value = getElementFullSelector(selectedElement);
     selectedElement.classList.add("context-menu-clicked-element");
     originalDisplay = selectedElement.style.display;
     if (isPreview) {
@@ -141,6 +146,7 @@ function openMenu() {
     if (!selectedElement) {
       selectedElement = originalElement;
     }
+    elementInput.value = getElementFullSelector(selectedElement);
     selectedElement.classList.add("context-menu-clicked-element");
     originalDisplay = selectedElement.style.display;
     if (isPreview) {
@@ -158,6 +164,8 @@ function openMenu() {
   });
   hideElement.addEventListener("click", function () {
     selectedElement.style.display = "none";
+    selectedElement.classList.remove("context-menu-clicked-element");
+    selectedElementToHide = getElementData(selectedElement);
     restoreDefaults();
     menu.remove();
     storeSelectedElementToHide();
@@ -254,7 +262,7 @@ function getElementSelector(element, index) {
 }
 
 function getElementIndex(element) {
-  return Array.from(element.parentNode.children).indexOf(element);
+  return Array.from(element.parentNode.children || []).indexOf(element);
 }
 
 function getElementFullSelector(element) {
