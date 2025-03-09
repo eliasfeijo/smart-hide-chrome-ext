@@ -24,19 +24,31 @@ chrome.contextMenus.onClicked.addListener(handleContextMenuClick);
 async function handleContextMenuClick(item, tab) {
   switch (item.menuItemId) {
     case "hide":
-      chrome.tabs.sendMessage(tab.id, "hideElement", {
-        frameId: item.frameId,
-      });
+      chrome.tabs.sendMessage(
+        tab.id,
+        { type: "hideElement" },
+        {
+          frameId: item.frameId,
+        }
+      );
       break;
     case "smart-hide":
-      chrome.tabs.sendMessage(tab.id, "smartHideElement", {
-        frameId: item.frameId,
-      });
+      chrome.tabs.sendMessage(
+        tab.id,
+        { type: "smartHideElement" },
+        {
+          frameId: item.frameId,
+        }
+      );
       break;
     case "remove":
-      chrome.tabs.sendMessage(tab.id, "removeElement", {
-        frameId: item.frameId,
-      });
+      chrome.tabs.sendMessage(
+        tab.id,
+        { type: "removeElement" },
+        {
+          frameId: item.frameId,
+        }
+      );
       break;
     default:
       break;

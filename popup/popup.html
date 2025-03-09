@@ -6,8 +6,14 @@
   </head>
   <body>
     <h1>Smart Hide Extension</h1>
-    <div>
+    <div style="display: flex;">
       <button id="btn-reset">Reset Data</button>
+    </div>
+    <div id="hide-selector">
+      <label for="hide-selector">Hide Selector</label>
+      <input type="text" id="hide-selector-input" placeholder="Enter CSS Selector">
+      <button id="btn-hide">Hide</button>
+      <p id="hide-selector-error" class="hidden">Error</p>
     </div>
   </body>
 </html>

@@ -20,24 +20,40 @@ document.addEventListener(
   (event) => {
     console.log("Event: ", event);
     clickedElement = getOuterContainer(event.target);
-    selectedElementToHide = getElementData(event.target, true);
+    selectedElementToHide = getElementData(event.target, false);
   },
   true
 );
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log("Received message: ", request);
-  switch (request) {
+  switch (request.type) {
     case "hideElement":
       if (selectedElementToHide) {
         clickedElement.style.visibility = "none";
+        selectedElementToHide = getElementData(clickedElement, true);
         storeSelectedElementToHide();
       } else {
         console.log("No element selected to hide");
       }
       break;
     case "smartHideElement":
-      smartHideElement();
+      if (request.selector) {
+        const element = document.querySelector(request.selector);
+        if (!element) {
+          sendResponse({ error: "Element not found" });
+          return;
+        }
+        clickedElement = element;
+        selectedElementToHide = getElementData(element, false);
+      }
+      try {
+        smartHideElement();
+      } catch (error) {
+        sendResponse({ error: error.message });
+        return;
+      }
+      sendResponse({ success: true });
       break;
     case "removeElement":
       if (selectedElementToHide) {
@@ -186,7 +202,7 @@ function openMenu() {
   hideElement.addEventListener("click", function () {
     selectedElement.style.visibility = "hidden";
     selectedElement.classList.remove("context-menu-clicked-element");
-    selectedElementToHide = getElementData(selectedElement);
+    selectedElementToHide = getElementData(selectedElement, false);
     selectedElementToHide.shouldRemove = shouldRemove;
     storeSelectedElementToHide();
     restoreDefaults();
@@ -236,19 +252,8 @@ function storeSelectedElementToHide() {
   });
 }
 
-function getElementData(element, shouldGetOuterContainer = false) {
-  // let parent = undefined;
-  // let index = undefined;
-  // if (element.parentElement) {
-  //   index = getElementIndex(element);
-  //   parent = getElementData(element.parentElement);
-  // }
-  // return {
-  //   selector: getElementSelector(element, index),
-  //   fullSelector: getElementFullSelector(element),
-  //   parent,
-  //   index,
-  // };
+function getElementData(element, shouldGetOuterContainer) {
+  console.log("Element: ", shouldGetOuterContainer, element);
   let container = shouldGetOuterContainer
     ? getOuterContainer(element)
     : element;
