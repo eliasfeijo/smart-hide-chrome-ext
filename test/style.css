@@ -1,0 +1,31 @@
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+}
+
+.ads-area {
+  /* background-color: red; */
+  border: solid 1px white;
+  display: flex;
+}
+
+.ads-area .ad {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: solid 1px black;
+  padding: 18px;
+}
+
+#top, #bottom {
+  height: 20vh;
+}
+
+#left, #right {
+  width: 15vw;
+  flex-direction: column;
+}
