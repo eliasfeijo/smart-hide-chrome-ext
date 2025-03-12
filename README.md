@@ -1,3 +1,6 @@
+## Read in Other Languages  
+- [Português (pt-br)](README_PT-BR.md) 
+
 # Smart Hide Chrome Extension  
 
 Welcome to **Smart Hide**, an open-source Chrome extension that lets you manually hide unwanted elements on any webpage—and remembers your preferences for future visits!  
