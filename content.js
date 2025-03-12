@@ -344,7 +344,7 @@ function hideElements() {
     if (element) {
       if (el.shouldRemove) {
         element.parentNode.removeChild(element);
-        return;
+        continue;
       }
       element.classList.add("__smart-hide-hidden-element");
     }
