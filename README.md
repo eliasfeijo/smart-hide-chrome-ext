@@ -1,54 +1,58 @@
-## Read in Other Languages  
-- [Português (pt-br)](README_PT-BR.md) 
+## Read in Other Languages
 
-# Smart Hide Chrome Extension  
+- [Português (pt-br)](README_PT-BR.md)
+
+# Smart Hide Chrome Extension
 
 ![Demo of Smart Hide Extension](docs/smart-hide-demo.gif)
 
-Welcome to **Smart Hide**, an open-source Chrome extension that lets you manually hide unwanted elements on any webpage—and remembers your preferences for future visits!  
+Welcome to **Smart Hide**, an open-source Chrome extension that lets you manually hide unwanted elements on any webpage—and remembers your preferences for future visits!
 
-Whether it’s distracting ads, annoying pop-ups, or anything else cluttering your screen, Smart Hide helps you declutter and focus on what matters.  
+Whether it’s distracting ads, annoying pop-ups, or anything else cluttering your screen, Smart Hide helps you declutter and focus on what matters.
 
-## How to Install  
+## How to Install
 
-Since this is an open-source project, you’ll need to manually download and enable the extension in Chrome. Don’t worry—it’s easy! Here’s how:  
+Since this is an open-source project, you’ll need to manually download and enable the extension in Chrome. Don’t worry—it’s easy! Here’s how:
 
-1. **Download the Latest Release**  
-   - Go to the [Releases page](https://github.com/eliasfeijo/smart-hide-chrome-ext/releases) of this repository.  
-   - Download the latest `.zip` file under "Assets."  
+1. **Download the Latest Release**
 
-2. **Extract the Files**  
-   - Unzip the downloaded file to a folder on your computer.  
+   - Go to the [Releases page](https://github.com/eliasfeijo/smart-hide-chrome-ext/releases) of this repository.
+   - Download the latest `.zip` file under "Assets."
 
-3. **Enable Developer Mode in Chrome**  
-   - Open Chrome and go to `chrome://extensions/`.  
-   - Toggle the **Developer mode** switch on (located in the top-right corner).  
+2. **Extract the Files**
 
-4. **Load the Extension**  
-   - Click the **Load unpacked** button.  
-   - Select the folder where you extracted the files.  
+   - Unzip the downloaded file to a folder on your computer.
 
-That’s it! The Smart Hide extension should now be installed and ready to use.  
+3. **Enable Developer Mode in Chrome**
 
-## How to Use  
+   - Open Chrome and go to `chrome://extensions/`.
+   - Toggle the **Developer mode** switch on (located in the top-right corner).
 
-1. Ensure that the Smart Hide extension is correctly installed (the extension's icon should be visible and clickable in your Chrome's toolbar).  
-2. Right-click the element you want to hide on the screen, and it should open the context menu that includes the option "Smart Hide."  
-3. You can select one out of three options:  
-   - **Hide**: One-click simple hide.  
-   - **Smart Hide**: Advanced hide with additional options.  
-   - **Remove**: One-click removal of the element from the HTML document.  
+4. **Load the Extension**
+   - Click the **Load unpacked** button.
+   - Select the folder where you extracted the files.
 
-Check out the **Features** section below for more information on each of these optio
+That’s it! The Smart Hide extension should now be installed and ready to use.
+
+## How to Use
+
+1. Ensure that the Smart Hide extension is correctly installed (the extension's icon should be visible and clickable in your Chrome's toolbar).
+2. Right-click the element you want to hide on the screen, and it should open the context menu that includes the option "Smart Hide".
+3. You can select one out of three options:
+   - **Hide**: One-click simple hide.
+   - **Smart Hide**: Advanced hide with additional options.
+   - **Remove**: One-click removal of the element from the HTML document.
+
+Check out the **Features** section below for more information on each of these options.
 
 ## Features
 
-**WIP**
+The list of features and the project's roadmap can be found in the [docs/features.md](docs/features.md) file.
 
-## Contributing  
+## Contributing
 
-This project is open-source, and contributions are welcome! If you have ideas for improvements or want to report a bug, please open an issue or submit a pull request.  
+This project is open-source, and contributions are welcome! If you have ideas for improvements or want to report a bug, please open an issue or submit a pull request.
 
-## License  
+## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
