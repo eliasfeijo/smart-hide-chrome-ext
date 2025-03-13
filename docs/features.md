@@ -11,7 +11,7 @@ Smart Hide offers three powerful right click options to help you customize your 
 
 ### 3. **One-click Remove**
 
-- **What it does**: Completely removes the selected element from the HTML document (doesn't leave a blank space, but may behave weirdly in some cases, e.g. when removing one or more items from a list/group of elements).
+- **What it does**: Completely removes the selected element from the HTML document (doesn't leave a blank space, but may behave weirdly in some cases, e.g. when removing one or more items from a dynamic list/group of elements).
 - **Use case**: Great when you want to free the blank space of a hidden element for other elements to fill in, but I recommend you to try it out and see the behavior for yourself on a few different webpages, just keep removing a random element at a time and refreshing the page, and compare with the simple hide.
 
 ### 3. **Smart Hide**
