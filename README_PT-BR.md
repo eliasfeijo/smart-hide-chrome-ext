@@ -32,9 +32,18 @@ Pronto! A extensão Smart Hide estará instalada e pronta para uso.
 
 ## Como Usar  
 
-1. Clique no ícone do Smart Hide na barra de ferramentas do Chrome para ativá-lo.  
-2. Clique em qualquer elemento da página que você deseja esconder.  
-3. O elemento desaparecerá instantaneamente—e continuará escondido mesmo quando você revisitá-la!  
+1. Certifique-se de que a extensão Smart Hide está corretamente instalada (o ícone da extensão deve estar visível e clicável na barra de ferramentas do Chrome).  
+2. Clique com o botão direito no elemento que você deseja esconder na tela, e isso abrirá o menu de contexto com a opção "Smart Hide".
+3. Você pode escolher uma das três opções:  
+   - **Hide**: Esconde o elemento com um único clique.  
+   - **Smart Hide**: Esconde o elemento com opções avançadas.  
+   - **Remove**: Remove o elemento do documento HTML com um único clique.  
+
+Confira a seção **Funcionalidades** abaixo para mais informações sobre cada uma dessas opções. 
+
+## Funcionalidades
+
+**WIP**
 
 ## Contribuindo  
 
