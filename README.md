@@ -3,6 +3,8 @@
 
 # Smart Hide Chrome Extension  
 
+![Demo of Smart Hide Extension](docs/smart-hide-demo.gif)
+
 Welcome to **Smart Hide**, an open-source Chrome extension that lets you manually hide unwanted elements on any webpage—and remembers your preferences for future visits!  
 
 Whether it’s distracting ads, annoying pop-ups, or anything else cluttering your screen, Smart Hide helps you declutter and focus on what matters.  

@@ -1,7 +1,9 @@
 ## Leia em Outros Idiomas  
 - [English (Original)](README.md) 
 
-# Smart Hide - Extensão para Chrome  
+# Smart Hide - Extensão para Chrome 
+
+![Demonstração da extensão Smart Hide](docs/smart-hide-demo.gif)
 
 Bem-vindo ao **Smart Hide**, uma extensão open-source para Chrome que permite esconder manualmente elementos indesejados em qualquer página da web—e lembra das suas preferências nas próximas visitas!  
 
